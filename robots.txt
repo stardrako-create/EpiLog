@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://epilogbio.netlify.app/sitemap.xml

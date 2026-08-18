@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EpiLog — Genomic Safe Harbor Catalog &amp; Silencing Registry</title>
+<meta name="description" content="EpiLog is a curated, literature-derived catalog of genomic safe harbor loci (AAVS1, ROSA26, H11, CCR5, CLYBL, Drosophila attP/VK landing sites, and more) and a registry for tracking gene-editing silencing outcomes over time, across human, mouse, dog, pig, goat, cattle, zebrafish, and Drosophila melanogaster." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://epilogbio.netlify.app/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="EpiLog — Genomic Safe Harbor Catalog & Silencing Registry" />
+<meta property="og:description" content="A curated, literature-derived catalog of genomic safe harbor loci and post-edit silencing outcomes, spanning human, mouse, dog, pig, goat, cattle, zebrafish, and Drosophila." />
+<meta property="og:url" content="https://epilogbio.netlify.app/" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="EpiLog — Genomic Safe Harbor Catalog & Silencing Registry" />
+<meta name="twitter:description" content="A curated, literature-derived catalog of genomic safe harbor loci and post-edit silencing outcomes, spanning human, mouse, dog, pig, goat, cattle, zebrafish, and Drosophila." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "EpiLog Genomic Safe Harbor Catalog",
+  "description": "A curated, literature-derived catalog of genomic safe harbor loci (e.g. AAVS1, ROSA26, H11, CCR5, CLYBL, and Drosophila melanogaster attP/VK landing sites) and their post-editing silencing/expression outcomes, with per-tissue, per-confidence, and genome-build annotations, spanning human, mouse, dog, pig, goat, cattle, zebrafish, and Drosophila.",
+  "url": "https://epilogbio.netlify.app/",
+  "keywords": ["genomic safe harbor", "AAVS1", "ROSA26", "H11", "CCR5", "CLYBL", "CRISPR", "transgene silencing", "gene editing", "epigenetics", "Drosophila attP", "genome engineering", "genomic safe harbor dog", "genomic safe harbor canine"],
+  "isAccessibleForFree": true,
+  "usageInfo": "Data is provided for reference. Extraction, redistribution, or substantial reuse outside this platform requires prior written permission from the maintainer -- see the in-app terms shown on first visit.",
+  "variableMeasured": ["locus_name", "species", "genome_build", "coords", "confidence", "stability", "tissue_context", "evidence_summary", "source_pmid"],
+  "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "application/json",
+    "contentUrl": "https://kuexbhegkwnunxaqvjbs.supabase.co/rest/v1/known_safe_harbors?apikey=sb_publishable_uL3XfMc3Q_JPCPV9M8Kg2g_aJuCy4Qh&select=*"
+  }
+}
+</script>
+
+<!--
+  SETUP (one time only):
+  1. Fill in SUPABASE_URL and SUPABASE_ANON_KEY below (Settings > API in your Supabase project).
+  2. Run the SQL schema from the chat in the Supabase SQL Editor.
+  3. Host this file (GitHub Pages, Netlify, etc.) to get a shareable fixed link.
+-->
+<style>
+  :root {
+    --bg: #F2F5F4;
+    --bg-line: rgba(20, 32, 35, 0.05);
+    --surface: #FFFFFF;
+    --surface-2: #E8EDEC;
+    --border: #D3DBDA;
+    --text: #142023;
+    --text-muted: #5C6E71;
+    --text-faint: #8B9C9C;
+    --accent: #0E7C86;
+    --accent-strong: #0B646C;
+    --accent-soft: #DCEEEF;
+    --accent-ink: #FFFFFF;
+    --good: #2F8F4E;
+    --good-soft: #DFF3E4;
+    --warn: #B8790A;
+    --warn-soft: #FBEBD2;
+    --bad: #B23D28;
+    --bad-soft: #FBE1DA;
+    --shadow: 0 1px 2px rgba(20, 32, 35, 0.06), 0 4px 14px rgba(20, 32, 35, 0.05);
+    --radius: 8px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, "Roboto Mono", monospace;
+    --font-sans: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0E1517; --bg-line: rgba(231, 238, 236, 0.04); --surface: #141D1F; --surface-2: #1B2628;
+      --border: #2A3739; --text: #E7EEEC; --text-muted: #96A6A6; --text-faint: #5C6E71;
+      --accent: #3FBEC2; --accent-strong: #63D0D3; --accent-soft: rgba(63, 190, 194, 0.14); --accent-ink: #06262A;
+      --good: #55B872; --good-soft: rgba(85, 184, 114, 0.14); --warn: #E3AC4C; --warn-soft: rgba(227, 172, 76, 0.14);
+      --bad: #E17A61; --bad-soft: rgba(225, 122, 97, 0.14);
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 18px rgba(0, 0, 0, 0.28);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0E1517; --bg-line: rgba(231, 238, 236, 0.04); --surface: #141D1F; --surface-2: #1B2628;
+    --border: #2A3739; --text: #E7EEEC; --text-muted: #96A6A6; --text-faint: #5C6E71;
+    --accent: #3FBEC2; --accent-strong: #63D0D3; --accent-soft: rgba(63, 190, 194, 0.14); --accent-ink: #06262A;
+    --good: #55B872; --good-soft: rgba(85, 184, 114, 0.14); --warn: #E3AC4C; --warn-soft: rgba(227, 172, 76, 0.14);
+    --bad: #E17A61; --bad-soft: rgba(225, 122, 97, 0.14);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 18px rgba(0, 0, 0, 0.28);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background-color: var(--bg);
+    background-image: repeating-linear-gradient(to bottom, var(--bg-line) 0, var(--bg-line) 1px, transparent 1px, transparent 28px);
+    color: var(--text); font-family: var(--font-sans); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+  .app { max-width: 880px; margin: 0 auto; padding: var(--space-5) var(--space-4) var(--space-6); }
+  .topbar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4); padding-bottom: var(--space-4); margin-bottom: var(--space-5); border-bottom: 1px solid var(--border); }
+  .brand-mark { display: block; font-family: var(--font-mono); font-weight: 700; font-size: 19px; letter-spacing: 0.01em; color: var(--text); }
+  .brand-mark span { color: var(--accent); }
+  .brand-sub { display: block; margin-top: 2px; font-size: 12.5px; color: var(--text-muted); }
+  .tabs { display: flex; gap: var(--space-1); background: var(--surface-2); padding: 3px; border-radius: var(--radius); border: 1px solid var(--border); flex-wrap: wrap; }
+  .tab { appearance: none; border: none; background: transparent; color: var(--text-muted); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.03em; text-transform: uppercase; padding: 7px 12px; border-radius: 5px; cursor: pointer; }
+  .tab:hover { color: var(--text); }
+  .tab.active { background: var(--surface); color: var(--accent-strong); box-shadow: var(--shadow); }
+  .tab:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--space-5); }
+  .card + .card { margin-top: var(--space-4); }
+  .group-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin: 0 0 var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--border); }
+  .group + .group { margin-top: var(--space-5); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  @media (max-width: 620px) { .grid-2 { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.wide { grid-column: 1 / -1; }
+  label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  .hint { font-size: 11.5px; color: var(--text-faint); margin-top: 1px; }
+  input[type="text"], input[type="number"], select, textarea {
+    font-family: var(--font-sans); font-size: 14px; color: var(--text); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 6px; padding: 9px 10px; width: 100%;
+  }
+  input[type="text"].mono, .coord-input { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  textarea { resize: vertical; min-height: 56px; font-family: var(--font-sans); }
+  select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--text-faint) 50%), linear-gradient(135deg, var(--text-faint) 50%, transparent 50%); background-position: calc(100% - 16px) 14px, calc(100% - 11px) 14px; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 30px; }
+  .actions { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-5); flex-wrap: wrap; }
+  .btn { font-family: var(--font-sans); font-size: 14px; font-weight: 600; border-radius: 6px; padding: 10px 18px; cursor: pointer; border: 1px solid transparent; }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); }
+  .btn-primary:hover { background: var(--accent-strong); }
+  .btn-primary:disabled { opacity: 0.6; cursor: default; }
+  .btn-ghost { background: transparent; border-color: var(--border); color: var(--text-muted); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--text-faint); }
+  .segmented { display: flex; flex-wrap: wrap; gap: 6px; }
+  .seg-btn { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); border-radius: 6px; padding: 7px 12px; cursor: pointer; }
+  .seg-btn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
+  .state-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+  @media (max-width: 480px) { .state-group { grid-template-columns: 1fr; } }
+  .state-btn { display: flex; align-items: center; gap: 8px; justify-content: center; font-family: var(--font-sans); font-weight: 600; font-size: 13.5px; border-radius: 6px; padding: 12px; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface); color: var(--text-muted); }
+  .state-btn .dot { width: 9px; height: 9px; border-radius: 50%; background: currentColor; opacity: 0.55; }
+  .state-btn[data-state="active"][aria-pressed="true"] { background: var(--good-soft); border-color: var(--good); color: var(--good); }
+  .state-btn[data-state="partial"][aria-pressed="true"] { background: var(--warn-soft); border-color: var(--warn); color: var(--warn); }
+  .state-btn[data-state="silenced"][aria-pressed="true"] { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+  .summary-row { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-4); }
+  .stat { flex: 1; min-width: 120px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-3) var(--space-4); }
+  .stat .n { font-family: var(--font-mono); font-size: 22px; font-variant-numeric: tabular-nums; color: var(--text); }
+  .stat .l { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; }
+  thead th { text-align: left; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); padding: 10px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 13.5px; vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  .mono-cell { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--text-muted); font-size: 12.5px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .pill.active { background: var(--good-soft); color: var(--good); }
+  .pill.partial { background: var(--warn-soft); color: var(--warn); }
+  .pill.silenced { background: var(--bad-soft); color: var(--bad); }
+  .pill.none { background: var(--surface-2); color: var(--text-faint); }
+  .pill.conf-high { background: var(--good-soft); color: var(--good); }
+  .pill.conf-medium { background: var(--warn-soft); color: var(--warn); }
+  .pill.conf-low { background: var(--surface-2); color: var(--text-faint); }
+  .catalog-table { table-layout: auto; }
+  .catalog-table td:nth-child(1) { min-width: 110px; }
+  .catalog-table td:nth-child(2) { white-space: nowrap; }
+  .catalog-table td:nth-child(3) { white-space: nowrap; }
+  .catalog-table td:nth-child(4) { white-space: nowrap; }
+  .catalog-table td:nth-child(8) { white-space: nowrap; }
+  .catalog-evidence, .catalog-stability { overflow-wrap: break-word; white-space: normal; max-width: 260px; }
+  .catalog-evidence { font-size: 12.5px; color: var(--text-muted); line-height: 1.45; }
+  .catalog-stability { font-size: 12.5px; color: var(--text); line-height: 1.4; }
+  .ev-toggle { background: none; border: none; color: var(--accent); font-size: 12px; cursor: pointer; padding: 0; margin-top: 4px; display: inline-block; font-family: var(--font-sans); }
+  .ev-full { display: none; }
+  .ev-full.open { display: inline; }
+  .ev-short.hidden { display: none; }
+  .catalog-source { font-size: 11.5px; color: var(--text-faint); }
+  .pmid-link { color: var(--accent); text-decoration: none; }
+  .pmid-link:hover { text-decoration: underline; }
+  .expand-btn { background: none; border: none; color: var(--accent); font-size: 12px; cursor: pointer; padding: 0; font-family: var(--font-sans); }
+  .history { margin-top: 8px; padding-left: 10px; border-left: 2px solid var(--border); display: none; }
+  .history.open { display: block; }
+  .history-item { font-size: 12px; color: var(--text-muted); padding: 3px 0; }
+  .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(12px); background: var(--text); color: var(--bg); font-size: 13px; font-weight: 600; padding: 10px 18px; border-radius: 999px; box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease; z-index: 50; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+  .empty { padding: var(--space-5); text-align: center; color: var(--text-faint); font-size: 13px; }
+  .setup-banner { background: var(--warn-soft); border: 1px solid var(--warn); color: var(--warn); border-radius: var(--radius); padding: var(--space-3) var(--space-4); margin-bottom: var(--space-4); font-size: 13px; }
+  .setup-banner code { font-family: var(--font-mono); font-size: 12px; }
+  .static-summary { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--space-5); margin-bottom: var(--space-4); font-size: 13.5px; color: var(--text-muted); line-height: 1.55; }
+  .static-summary p { margin: 0 0 var(--space-3); }
+  .static-summary ul { margin: 0 0 var(--space-3); padding-left: 20px; }
+  .static-summary li { margin-bottom: 6px; }
+  .static-summary strong { color: var(--text); }
+
+  .consent-overlay {
+    position: fixed; inset: 0; background: rgba(10, 15, 16, 0.72);
+    display: flex; align-items: center; justify-content: center; padding: var(--space-4); z-index: 100;
+  }
+  .consent-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: var(--shadow); max-width: 560px; width: 100%; max-height: 84vh;
+    display: flex; flex-direction: column;
+  }
+  .consent-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border); }
+  .consent-header .brand-mark { font-size: 17px; }
+  .consent-body { padding: var(--space-4) var(--space-5); overflow-y: auto; font-size: 13px; color: var(--text-muted); }
+  .consent-body h3 { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); margin: var(--space-4) 0 var(--space-2); }
+  .consent-body h3:first-child { margin-top: 0; }
+  .consent-body p { margin: 0 0 var(--space-2); }
+  .consent-footer { padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: var(--space-3); }
+  .consent-check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text); }
+  .consent-check input { margin-top: 3px; }
+</style>
+</head>
+<body>
+<div class="consent-overlay" id="consent-overlay" style="display:none;">
+  <div class="consent-card">
+    <div class="consent-header">
+      <span class="brand-mark">Epi<span>Log</span></span>
+    </div>
+    <div class="consent-body">
+      <h3>What this is</h3>
+      <p>EpiLog is a shared, pilot-stage registry of gene-editing loci and their expression outcome over time — mainly post-insertion epigenetic silencing. It is maintained for internal research use among invited labs.</p>
+      <h3>What you agree to by using this</h3>
+      <p>Data you submit (locus, species, edit type, check-in results) becomes part of a shared database, used for aggregate analysis and to improve the automatic annotations returned to all users.</p>
+      <p>You may not extract, redistribute, republish, or substantially reuse data obtained through this platform outside of it, in whole or in part, without prior written permission. This database is a protected compilation (including under the EU's sui generis database right); unauthorized extraction or reuse of a substantial part of its content constitutes infringement.</p>
+      <p>There is no guarantee of accuracy for aggregated data — this is a collaborative, beta-stage registry, not a clinically validated resource.</p>
+      <h3>Questions or data removal</h3>
+      <p>Contact the project lead for removal requests or clarifications.</p>
+    </div>
+    <div class="consent-footer">
+      <label class="consent-check">
+        <input type="checkbox" id="consent-checkbox" />
+        I have read and accept the terms above.
+      </label>
+      <button type="button" class="btn btn-primary" id="consent-accept" disabled="disabled">Accept and continue</button>
+    </div>
+  </div>
+</div>
+<div class="app">
+  <div id="setup-banner" class="setup-banner" style="display:none;">
+    Not yet configured: fill in <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> near the top of this file. Until then, data will not be saved.
+  </div>
+
+  <header class="topbar">
+    <div>
+      <span class="brand-mark">Epi<span>Log</span></span>
+      <span class="brand-sub">post-edit silencing registry · FOXO3 / FOXM1 and other loci</span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="new" role="tab" aria-selected="true">New Experiment</button>
+      <button class="tab" data-tab="checkin" role="tab" aria-selected="false">Check-in</button>
+      <button class="tab" data-tab="records" role="tab" aria-selected="false">Records</button>
+      <button class="tab" data-tab="catalog" role="tab" aria-selected="false">Catalog</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="panel-new" class="panel active">
+      <form id="form-new" class="card" autocomplete="off">
+        <div class="group">
+          <p class="group-label">Locus</p>
+          <div class="grid-2">
+            <div class="field">
+              <label for="species">Species</label>
+              <select id="species" required="required">
+                <option value="Dog">Dog</option>
+                <option value="Mouse">Mouse</option>
+                <option value="Human">Human</option>
+                <option value="Drosophila">Drosophila</option>
+                <option value="Rat">Rat</option>
+                <option value="Pig">Pig</option>
+                <option value="Goat">Goat</option>
+                <option value="Cattle">Cattle</option>
+                <option value="Zebrafish">Zebrafish</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="build">Genome build</label>
+              <select id="build" required="required">
+                <option value="CanFam6">CanFam6</option>
+                <option value="GRCm39">GRCm39</option>
+                <option value="GRCh38">GRCh38</option>
+                <option value="BDGP6/dm6">BDGP6/dm6 (Drosophila)</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="field wide">
+              <label for="coords">Coordinates</label>
+              <input class="coord-input" type="text" id="coords" placeholder="chr5:51,637,660-51,637,700" required="required" />
+              <span class="hint">Epigenomic annotation (methylation, accessibility, conservation) is coming in a future version — register the locus now.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="group">
+          <p class="group-label">Donor</p>
+          <div class="grid-2">
+            <div class="field">
+              <label for="donor-age">Donor age (days)</label>
+              <input class="coord-input" type="number" id="donor-age" min="0" placeholder="e.g. 730" required="required" />
+              <span class="hint" id="donor-age-hint">Days since birth — more precise than years/months for comparing across species.</span>
+            </div>
+            <div class="field">
+              <label for="tissue">Tissue of origin</label>
+              <input type="text" id="tissue" list="tissues" placeholder="Peripheral blood, bone marrow…" required="required" />
+              <datalist id="tissues">
+                <option value="Peripheral blood / PBMC"></option>
+                <option value="Bone marrow"></option>
+                <option value="Skin / fibroblasts"></option>
+                <option value="Liver"></option>
+                <option value="Skeletal muscle"></option>
+              </datalist>
+            </div>
+          </div>
+        </div>
+
+        <div class="group">
+          <p class="group-label">Editing</p>
+          <div class="grid-2">
+            <div class="field">
+              <label for="gene">Target gene</label>
+              <select id="gene" required="required">
+                <option value="FOXO3">FOXO3</option>
+                <option value="FOXM1">FOXM1</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="edit-type">Edit type</label>
+              <select id="edit-type" required="required">
+                <option>Knock-in</option>
+                <option>Knock-out</option>
+                <option>CRISPRi</option>
+                <option>CRISPRa</option>
+                <option>Transgene insertion</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="delivery">Delivery method</label>
+              <select id="delivery" required="required">
+                <option>AAV</option>
+                <option>Lentivirus</option>
+                <option>RNP electroporation</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="cell-model">Cell model</label>
+              <input type="text" id="cell-model" list="cell-models" placeholder="PBMC, primary T cells…" required="required" />
+              <datalist id="cell-models">
+                <option value="PBMC"></option>
+                <option value="Primary T cells"></option>
+                <option value="HEK293"></option>
+                <option value="Fibroblasts"></option>
+              </datalist>
+            </div>
+          </div>
+        </div>
+
+        <div class="group">
+          <p class="group-label">Record</p>
+          <div class="grid-2">
+            <div class="field">
+              <label for="operator">Researcher</label>
+              <input type="text" id="operator" placeholder="Name" required="required" />
+            </div>
+            <div class="field wide">
+              <label for="notes-new">Notes <span style="font-weight:400; color:var(--text-faint);">(optional)</span></label>
+              <textarea id="notes-new" placeholder="E.g.: gene desert on UCSC, no nearby SINEs…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="btn-new-submit">Register experiment</button>
+          <span class="hint">Takes less than a minute.</span>
+        </div>
+      </form>
+    </section>
+
+    <section id="panel-checkin" class="panel">
+      <form id="form-checkin" class="card" autocomplete="off">
+        <div class="group">
+          <p class="group-label">Experiment</p>
+          <div class="field wide">
+            <label for="exp-select">Select experiment</label>
+            <select id="exp-select" required="required"></select>
+          </div>
+        </div>
+
+        <div class="group">
+          <p class="group-label">Days post-edit</p>
+          <div class="segmented" id="day-segments">
+            <button type="button" class="seg-btn" data-day="7">7</button>
+            <button type="button" class="seg-btn" data-day="14">14</button>
+            <button type="button" class="seg-btn" data-day="30">30</button>
+            <button type="button" class="seg-btn" data-day="60">60</button>
+            <button type="button" class="seg-btn" data-day="90">90</button>
+            <button type="button" class="seg-btn" data-day="custom">Other</button>
+          </div>
+          <div class="field" id="custom-day-field" style="display:none; margin-top:10px; max-width:160px;">
+            <input type="number" id="custom-day" class="coord-input" min="0" placeholder="days" />
+          </div>
+        </div>
+
+        <div class="group">
+          <p class="group-label">Observed state</p>
+          <div class="state-group" role="group">
+            <button type="button" class="state-btn" data-state="active" aria-pressed="false"><span class="dot"></span>Active</button>
+            <button type="button" class="state-btn" data-state="partial" aria-pressed="false"><span class="dot"></span>Partial</button>
+            <button type="button" class="state-btn" data-state="silenced" aria-pressed="false"><span class="dot"></span>Silenced</button>
+          </div>
+        </div>
+
+        <div class="group">
+          <p class="group-label">Detail</p>
+          <div class="grid-2">
+            <div class="field">
+              <label for="assay">Assay</label>
+              <select id="assay">
+                <option>qPCR</option>
+                <option>Flow cytometry</option>
+                <option>Western blot</option>
+                <option>Sequencing</option>
+              </select>
+            </div>
+            <div class="field wide">
+              <label for="notes-checkin">Notes <span style="font-weight:400; color:var(--text-faint);">(optional)</span></label>
+              <textarea id="notes-checkin" placeholder="E.g.: methylation peak 12bp from the insertion site…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="btn-checkin-submit">Save check-in</button>
+          <span class="hint">Three clicks: days, state, assay.</span>
+        </div>
+      </form>
+    </section>
+
+    <section id="panel-records" class="panel">
+      <div class="summary-row" id="summary-row"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Locus</th>
+              <th>Species / build</th>
+              <th>Gene</th>
+              <th>Edit type</th>
+              <th>Current state</th>
+              <th>Last check-in</th>
+              <th>Donor age</th>
+              <th>Tissue</th>
+              <th>Researcher</th>
+            </tr>
+          </thead>
+          <tbody id="records-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="panel-catalog" class="panel">
+      <div class="static-summary">
+        <p>EpiLog maintains a curated, literature-derived catalog of genomic safe harbor loci and their post-editing expression/silencing outcomes. The interactive table below loads live from the database once you search or filter; for reference, some of the loci currently catalogued include:</p>
+        <ul>
+          <li><strong>AAVS1</strong> (human, 19q13.4) — the most extensively characterized human safe harbor; multiple studies show robust iPSC expression but tissue-dependent silencing after cardiomyocyte differentiation.</li>
+          <li><strong>ROSA26</strong> (human, mouse, pig, goat, cattle orthologs) — a broadly conserved "quiet locus" used across species for stable transgene expression.</li>
+          <li><strong>H11</strong> (human, mouse, pig, goat orthologs) — intergenic locus between DRG1/EIF4ENIF1, validated for neuronal differentiation and stable multi-species transgene expression.</li>
+          <li><strong>CCR5</strong> (human) — HIV-resistance-linked locus; natural CCR5-delta32 loss is well tolerated but trades HIV resistance for increased West Nile virus susceptibility.</li>
+          <li><strong>CLYBL</strong> (human) — outperforms AAVS1 in several studies; endogenous gene has a real but tolerable metabolic role (vitamin B12 pathway).</li>
+          <li><strong>TRAC, GSH6</strong> (human) — genomic safe harbors used in CAR-T cell engineering, including real clinical trial data.</li>
+          <li><strong>Rogi1, Rogi2, Pansio-1, Olonne-18, Keppel-19</strong> (human, GRCh38 coordinates) — computationally discovered and experimentally validated safe harbor candidates.</li>
+          <li><strong>attP2, attP40, ZH-attP-86Fb, VK00001–VK00040</strong> (Drosophila melanogaster, dm3 coordinates) — phiC31-integrase docking sites for germline transgenesis; attP40 has a documented tissue-specific caveat (msp-300 disruption).</li>
+          <li><strong>pH11</strong> (pig) and caprine H11/ROSA26 (goat) — livestock safe harbors validated with per-tissue expression data across heart, liver, spleen, lung, kidney, muscle, and more.</li>
+        </ul>
+        <p>Every entry is tagged with a confidence tier (how directly the data was extracted from the primary literature), a stability/duration summary, tissue context, and a linked PubMed source. The full catalog (currently well over 100 records) is also available as a raw, machine-readable JSON feed: <a href="https://kuexbhegkwnunxaqvjbs.supabase.co/rest/v1/known_safe_harbors?apikey=sb_publishable_uL3XfMc3Q_JPCPV9M8Kg2g_aJuCy4Qh&amp;select=*" target="_blank" rel="noopener noreferrer">view full catalog as JSON</a>.</p>
+      </div>
+      <div class="card" style="margin-bottom: var(--space-4);">
+        <div class="field">
+          <label for="catalog-search">Check before you cut</label>
+          <input class="coord-input" type="text" id="catalog-search" placeholder="search by locus, species, or keyword (e.g. AAVS1, mouse, silenced...)" />
+        </div>
+        <div class="field" style="margin-top: var(--space-4);">
+          <label for="catalog-species-filter">Species / genome build</label>
+          <select id="catalog-species-filter">
+            <option value="">All species</option>
+          </select>
+          <span class="hint">A coordinate only means something relative to a specific assembly -- dm3 and dm6, or GRCh37 and GRCh38, are not interchangeable. Each option below is a species+build pair, not just the species.</span>
+        </div>
+        <span class="hint" style="display:block; margin-top: var(--space-3);">Public catalog, extracted from manually reviewed literature. Free, no need to register anything first.</span>
+      </div>
+      <div class="summary-row" id="catalog-summary"></div>
+      <div class="table-wrap">
+        <table class="catalog-table">
+          <thead>
+            <tr>
+              <th>Locus</th>
+              <th>Species</th>
+              <th>Coordinates</th>
+              <th>Confidence</th>
+              <th>Stability</th>
+              <th>Tissue</th>
+              <th>Evidence</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody id="catalog-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  // --- SETUP: paste your Supabase project credentials here (Settings > API) ---
+  var SUPABASE_URL = "https://kuexbhegkwnunxaqvjbs.supabase.co";
+  var SUPABASE_ANON_KEY = "sb_publishable_uL3XfMc3Q_JPCPV9M8Kg2g_aJuCy4Qh";
+  // ----------------------------------------------------------------------------
+
+  var sb = null;
+  if (SUPABASE_URL.indexOf("COLA_AQUI") === -1 && window.supabase) {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else {
+    document.getElementById("setup-banner").style.display = "block";
+  }
+
+  var stateLabel = { active: "Active", partial: "Partial", silenced: "Silenced" };
+  var records = [];
+
+  (function () {
+    var CONSENT_KEY = "epilog_consent_v1";
+    if (localStorage.getItem(CONSENT_KEY) === "accepted") { return; }
+    var overlay = document.getElementById("consent-overlay");
+    var checkbox = document.getElementById("consent-checkbox");
+    var acceptBtn = document.getElementById("consent-accept");
+    overlay.style.display = "flex";
+    checkbox.addEventListener("change", function () { acceptBtn.disabled = !checkbox.checked; });
+    acceptBtn.addEventListener("click", function () {
+      localStorage.setItem(CONSENT_KEY, "accepted");
+      overlay.style.display = "none";
+    });
+  })();
+
+  function formatAge(days) {
+    if (days === null || days === undefined) { return "—"; }
+    var years = days / 365;
+    return years >= 1 ? years.toFixed(1) + "y" : days + "d";
+  }
+
+  var donorAgeInput = document.getElementById("donor-age");
+  donorAgeInput.addEventListener("input", function () {
+    var days = parseInt(donorAgeInput.value, 10);
+    var hint = document.getElementById("donor-age-hint");
+    if (!Number.isNaN(days) && days > 0) {
+      hint.textContent = "≈ " + (days / 365).toFixed(1) + " years.";
+    } else {
+      hint.textContent = "Days since birth — more precise than years/months for comparing across species.";
+    }
+  });
+
+  var tabs = document.querySelectorAll(".tab");
+  var panels = document.querySelectorAll(".panel");
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      tabs.forEach(function (t) { t.classList.remove("active"); t.setAttribute("aria-selected", "false"); });
+      panels.forEach(function (p) { p.classList.remove("active"); });
+      tab.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+      document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
+      if (tab.dataset.tab === "checkin") { loadRecords().then(populateExpSelect); }
+      if (tab.dataset.tab === "records") { loadRecords().then(renderRecords); }
+      if (tab.dataset.tab === "catalog") { loadCatalog(); }
+    });
+  });
+
+  function showToast(msg) {
+    var toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.classList.add("show");
+    window.clearTimeout(showToast._t);
+    showToast._t = window.setTimeout(function () { toast.classList.remove("show"); }, 2200);
+  }
+
+  async function loadRecords() {
+    if (!sb) { return records; }
+    var res = await sb.from("experiments").select("*, checkins(*)").order("created_at", { ascending: false });
+    if (res.error) { showToast("Error loading: " + res.error.message); return records; }
+    records = res.data.map(function (r) {
+      r.checkins = (r.checkins || []).slice().sort(function (a, b) { return a.day - b.day; });
+      return r;
+    });
+    return records;
+  }
+
+  var catalogRows = [];
+  var catalogLoaded = false;
+
+  var SPECIES_SCIENTIFIC = {
+    Human: "Homo sapiens",
+    Mouse: "Mus musculus",
+    Dog: "Canis lupus familiaris",
+    Rat: "Rattus norvegicus",
+    Pig: "Sus scrofa",
+    Zebrafish: "Danio rerio",
+    Drosophila: "Drosophila melanogaster",
+    Goat: "Capra hircus",
+    Cattle: "Bos taurus"
+  };
+  function scientificName(species) {
+    return SPECIES_SCIENTIFIC[species] || species || "—";
+  }
+
+  async function loadCatalog() {
+    if (!sb) { showToast("Connect Supabase first (yellow banner at the top)."); return; }
+    if (catalogLoaded) { return; }
+    var res = await sb.from("known_safe_harbors").select("*").order("locus_name");
+    if (res.error) { showToast("Error loading catalog: " + res.error.message); return; }
+    catalogRows = res.data || [];
+    catalogLoaded = true;
+    populateCatalogFilters(catalogRows);
+    showCatalogPrompt();
+  }
+
+  var COMBO_SEP = "||";
+
+  function populateCatalogFilters(rows) {
+    var speciesSel = document.getElementById("catalog-species-filter");
+    var combos = Array.from(new Set(rows.map(function (r) { return (r.species || "") + COMBO_SEP + (r.genome_build || ""); })))
+      .sort(function (a, b) { return a.localeCompare(b); });
+    combos.forEach(function (combo) {
+      var parts = combo.split(COMBO_SEP);
+      var sp = parts[0], build = parts[1];
+      if (!sp) { return; }
+      var opt = document.createElement("option");
+      opt.value = combo;
+      opt.textContent = scientificName(sp) + (build ? " (" + build + ")" : " (build not specified)");
+      speciesSel.appendChild(opt);
+    });
+  }
+
+  function showCatalogPrompt() {
+    var body = document.getElementById("catalog-body");
+    body.innerHTML = '<tr><td colspan="8" class="empty">Search by locus/keyword, or choose a species+build above, to see catalog entries.</td></tr>';
+    document.getElementById("catalog-summary").innerHTML = "";
+  }
+
+  function applyCatalogFilters() {
+    var q = document.getElementById("catalog-search").value.trim().toLowerCase();
+    var comboFilter = document.getElementById("catalog-species-filter").value;
+
+    if (!q && !comboFilter) { showCatalogPrompt(); return; }
+
+    var comboParts = comboFilter ? comboFilter.split(COMBO_SEP) : null;
+
+    var filtered = catalogRows.filter(function (r) {
+      if (comboParts) {
+        if ((r.species || "") !== comboParts[0]) { return false; }
+        if ((r.genome_build || "") !== comboParts[1]) { return false; }
+      }
+      if (!q) { return true; }
+      return [r.locus_name, r.species, scientificName(r.species), r.evidence_summary, r.coords, r.genome_build, r.tissue_context, r.stability]
+        .some(function (field) { return field && field.toLowerCase().indexOf(q) !== -1; });
+    });
+    renderCatalog(filtered);
+  }
+
+  function renderCatalog(rows) {
+    var body = document.getElementById("catalog-body");
+    body.innerHTML = "";
+
+    if (!rows.length) {
+      var tr0 = document.createElement("tr");
+      tr0.innerHTML = '<td colspan="8" class="empty">No results for this search.</td>';
+      body.appendChild(tr0);
+    }
+
+    var EV_TRUNCATE_AT = 140;
+
+    rows.forEach(function (r) {
+      var confClass = r.confidence === "high" ? "conf-high" : r.confidence === "medium" ? "conf-medium" : "conf-low";
+      var confLabel = r.confidence === "high" ? "High" : r.confidence === "medium" ? "Medium" : "Low";
+      var evidence = r.evidence_summary || "—";
+      var evidenceCell;
+      if (evidence.length > EV_TRUNCATE_AT) {
+        var cut = evidence.lastIndexOf(" ", EV_TRUNCATE_AT);
+        if (cut < 40) { cut = EV_TRUNCATE_AT; }
+        evidenceCell =
+          '<span class="ev-short">' + evidence.slice(0, cut) + '…</span>' +
+          '<span class="ev-full">' + evidence + '</span>' +
+          '<button type="button" class="ev-toggle">Show more</button>';
+      } else {
+        evidenceCell = evidence;
+      }
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        '<td><strong>' + (r.locus_name || "—") + '</strong></td>' +
+        '<td><em>' + scientificName(r.species) + '</em>' + (r.genome_build ? '<br /><span class="mono-cell">' + r.genome_build + '</span>' : '<br /><span class="mono-cell">genome build n/a</span>') + '</td>' +
+        '<td class="mono-cell">' + (r.coords || "—") + '</td>' +
+        '<td><span class="pill ' + confClass + '"><span class="dot"></span>' + confLabel + '</span></td>' +
+        '<td class="catalog-stability">' + (r.stability || "—") + '</td>' +
+        '<td class="catalog-stability">' + (r.tissue_context || "—") + '</td>' +
+        '<td class="catalog-evidence">' + evidenceCell + '</td>' +
+        '<td class="catalog-source">' + (r.source_pmid
+          ? '<a class="pmid-link" href="https://pubmed.ncbi.nlm.nih.gov/' + r.source_pmid + '/" target="_blank" rel="noopener noreferrer" title="' + (r.source_title ? r.source_title.replace(/"/g, "&quot;") : "") + '">PMID ' + r.source_pmid + '</a>'
+          : "—") + '</td>';
+      body.appendChild(tr);
+    });
+
+    var species = new Set(rows.map(function (r) { return r.species; }).filter(Boolean));
+    var loci = new Set(rows.map(function (r) { return r.locus_name; }).filter(Boolean));
+    var summary = document.getElementById("catalog-summary");
+    summary.innerHTML =
+      '<div class="stat"><div class="n">' + rows.length + '</div><div class="l">catalog records</div></div>' +
+      '<div class="stat"><div class="n">' + loci.size + '</div><div class="l">distinct loci</div></div>' +
+      '<div class="stat"><div class="n">' + species.size + '</div><div class="l">species covered</div></div>';
+  }
+
+  document.getElementById("catalog-body").addEventListener("click", function (e) {
+    var btn = e.target.closest(".ev-toggle");
+    if (!btn) return;
+    var cell = btn.closest("td");
+    var short = cell.querySelector(".ev-short");
+    var full = cell.querySelector(".ev-full");
+    var open = full.classList.toggle("open");
+    short.classList.toggle("hidden", open);
+    btn.textContent = open ? "Show less" : "Show more";
+  });
+
+  document.getElementById("catalog-search").addEventListener("input", applyCatalogFilters);
+  document.getElementById("catalog-species-filter").addEventListener("change", applyCatalogFilters);
+
+  document.getElementById("form-new").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (!sb) { showToast("Connect Supabase first (yellow banner at the top)."); return; }
+    var btn = document.getElementById("btn-new-submit");
+    btn.disabled = true;
+    var payload = {
+      species: document.getElementById("species").value,
+      genome_build: document.getElementById("build").value,
+      coords: document.getElementById("coords").value,
+      donor_age_days: parseInt(document.getElementById("donor-age").value, 10),
+      tissue: document.getElementById("tissue").value,
+      gene: document.getElementById("gene").value,
+      edit_type: document.getElementById("edit-type").value,
+      delivery: document.getElementById("delivery").value,
+      cell_model: document.getElementById("cell-model").value,
+      operator: document.getElementById("operator").value,
+      notes: document.getElementById("notes-new").value
+    };
+    var res = await sb.from("experiments").insert(payload);
+    btn.disabled = false;
+    if (res.error) { showToast("Error: " + res.error.message); return; }
+    this.reset();
+    showToast("Registered.");
+  });
+
+  var selectedDay = null;
+  document.getElementById("day-segments").addEventListener("click", function (e) {
+    var btn = e.target.closest(".seg-btn");
+    if (!btn) return;
+    document.querySelectorAll("#day-segments .seg-btn").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+    btn.setAttribute("aria-pressed", "true");
+    var custom = document.getElementById("custom-day-field");
+    if (btn.dataset.day === "custom") { custom.style.display = "block"; selectedDay = "custom"; }
+    else { custom.style.display = "none"; selectedDay = parseInt(btn.dataset.day, 10); }
+  });
+
+  var selectedState = null;
+  document.querySelectorAll(".state-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll(".state-btn").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+      btn.setAttribute("aria-pressed", "true");
+      selectedState = btn.dataset.state;
+    });
+  });
+
+  function populateExpSelect() {
+    var sel = document.getElementById("exp-select");
+    sel.innerHTML = "";
+    records.forEach(function (r) {
+      var opt = document.createElement("option");
+      opt.value = r.id;
+      opt.textContent = r.gene + " · " + r.species + " · " + r.coords;
+      sel.appendChild(opt);
+    });
+  }
+
+  document.getElementById("form-checkin").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (!sb) { showToast("Connect Supabase first (yellow banner at the top)."); return; }
+    var expId = document.getElementById("exp-select").value;
+    var day = selectedDay === "custom" ? parseInt(document.getElementById("custom-day").value, 10) : selectedDay;
+    if (!expId || day === null || Number.isNaN(day) || !selectedState) {
+      showToast("Choose the experiment, the days, and the state.");
+      return;
+    }
+    var btn = document.getElementById("btn-checkin-submit");
+    btn.disabled = true;
+    var res = await sb.from("checkins").insert({
+      experiment_id: expId,
+      day: day,
+      state: selectedState,
+      assay: document.getElementById("assay").value,
+      notes: document.getElementById("notes-checkin").value
+    });
+    btn.disabled = false;
+    if (res.error) { showToast("Error: " + res.error.message); return; }
+    this.reset();
+    document.querySelectorAll("#day-segments .seg-btn, .state-btn").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+    document.getElementById("custom-day-field").style.display = "none";
+    selectedDay = null;
+    selectedState = null;
+    showToast("Check-in saved.");
+  });
+
+  function renderRecords() {
+    var body = document.getElementById("records-body");
+    body.innerHTML = "";
+    var counts = { active: 0, partial: 0, silenced: 0, none: 0 };
+
+    if (!records.length) {
+      var tr0 = document.createElement("tr");
+      tr0.innerHTML = '<td colspan="9" class="empty">No experiments registered yet.</td>';
+      body.appendChild(tr0);
+    }
+
+    records.forEach(function (r) {
+      var latest = r.checkins.length ? r.checkins[r.checkins.length - 1] : null;
+      var stateKey = latest ? latest.state : "none";
+      counts[stateKey]++;
+
+      var tr = document.createElement("tr");
+      var pillHtml = latest
+        ? '<span class="pill ' + latest.state + '"><span class="dot"></span>' + stateLabel[latest.state] + '</span>'
+        : '<span class="pill none"><span class="dot"></span>No check-in</span>';
+      var lastCheckin = latest ? latest.day + " days · " + latest.assay : "—";
+      var historyHtml = r.checkins.map(function (c) {
+        return '<div class="history-item"><span class="mono-cell">D' + c.day + '</span> · ' + stateLabel[c.state] + ' · ' + c.assay + (c.notes ? " — " + c.notes : "") + '</div>';
+      }).join("");
+
+      tr.innerHTML =
+        '<td><span class="mono-cell">' + r.coords + '</span>' +
+        (r.checkins.length ? '<br /><button type="button" class="expand-btn" data-id="' + r.id + '">▸ view history (' + r.checkins.length + ')</button><div class="history" id="hist-' + r.id + '">' + historyHtml + '</div>' : '') +
+        '</td>' +
+        '<td>' + r.species + '<br /><span class="mono-cell">' + r.genome_build + '</span></td>' +
+        '<td>' + r.gene + '</td>' +
+        '<td>' + r.edit_type + '</td>' +
+        '<td>' + pillHtml + '</td>' +
+        '<td class="mono-cell">' + lastCheckin + '</td>' +
+        '<td class="mono-cell">' + formatAge(r.donor_age_days) + '</td>' +
+        '<td>' + (r.tissue || "—") + '</td>' +
+        '<td>' + (r.operator || "—") + '</td>';
+      body.appendChild(tr);
+    });
+
+    document.querySelectorAll(".expand-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var el = document.getElementById("hist-" + btn.dataset.id);
+        el.classList.toggle("open");
+        var rec = records.filter(function (r) { return r.id === btn.dataset.id; })[0];
+        btn.textContent = (el.classList.contains("open") ? "▾ view history (" : "▸ view history (") + rec.checkins.length + ")";
+      });
+    });
+
+    var summary = document.getElementById("summary-row");
+    summary.innerHTML =
+      '<div class="stat"><div class="n">' + records.length + '</div><div class="l">experiments registered</div></div>' +
+      '<div class="stat"><div class="n" style="color:var(--good)">' + counts.active + '</div><div class="l">active</div></div>' +
+      '<div class="stat"><div class="n" style="color:var(--warn)">' + counts.partial + '</div><div class="l">partial</div></div>' +
+      '<div class="stat"><div class="n" style="color:var(--bad)">' + counts.silenced + '</div><div class="l">silenced</div></div>';
+  }
+
+  loadRecords().then(renderRecords);
+</script>
+</body>
+</html>

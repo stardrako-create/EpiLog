@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use EpiLog in your work, please cite it as below."
+title: "EpiLog: A Curated Genomic Safe Harbor Catalog and Post-Edit Silencing Registry"
+abstract: >-
+  EpiLog is a literature-derived catalog of genomic safe harbor loci and their
+  post-editing expression/silencing outcomes, with per-record confidence
+  tiers, stability/duration summaries, tissue context, and genome-build
+  annotations, spanning human, mouse, dog, pig, goat, cattle, zebrafish, and
+  Drosophila melanogaster. It also provides a shared registry for logging new
+  gene-editing experiments and tracking silencing status over time.
+authors:
+  - family-names: "Paiva Sequeira"
+    given-names: "Manuel"
+    email: stardrako@gmail.com
+repository-code: "https://github.com/stardrako-create/EpiLog"
+url: "https://epilogbio.netlify.app"
+license: MIT
+keywords:
+  - genomic safe harbor
+  - AAVS1
+  - ROSA26
+  - CRISPR
+  - transgene silencing
+  - gene editing
+  - epigenetics
+  - genome engineering
+date-released: "2026-08-18"
