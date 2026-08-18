@@ -9,8 +9,8 @@ abstract: >-
   Drosophila melanogaster. It also provides a shared registry for logging new
   gene-editing experiments and tracking silencing status over time.
 authors:
-  - family-names: "Paiva Sequeira"
-    given-names: "Manuel"
+  - family-names: "de Paiva Menezes de Sequeira"
+    given-names: "Manuel Afonso"
     email: stardrako@gmail.com
 repository-code: "https://github.com/stardrako-create/EpiLog"
 url: "https://epilogbio.netlify.app"
