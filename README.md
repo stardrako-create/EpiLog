@@ -1,5 +1,8 @@
 # EpiLog
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21996453.svg)](https://doi.org/10.5281/zenodo.21996453)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 **A curated, literature-derived catalog of genomic safe harbor loci and post-edit silencing outcomes — plus a shared registry for tracking gene-editing experiments over time.**
 
 Live: [epilogbio.netlify.app](https://epilogbio.netlify.app)
@@ -52,12 +55,28 @@ A few deliberate choices, and the reasoning behind them:
 
 ## Running it locally
 
-No build step. Fill in `SUPABASE_URL` and `SUPABASE_ANON_KEY` near the top of `epilog-live.html`, then open the file or serve it with any static file server.
+No build step. Fill in `SUPABASE_URL` and `SUPABASE_ANON_KEY` near the top of `index.html`, then open the file or serve it with any static file server.
+
+## Known limitations / roadmap
+
+Being upfront about what's incomplete, rather than hiding it:
+
+- **`tissue_context` is only populated for records added since the field was introduced** (Drosophila and the pig/goat/cattle/dog/mouse multi-species batch). The original ~150 human/mouse records predate the field and are being backfilled retroactively.
+- **Dog (*Canis lupus familiaris*) has essentially no published safe-harbor characterization** — confirmed by two independent literature searches, not a gap in this catalog's coverage. This is itself a finding worth stating plainly, not a bug.
+- **Genome build is left `null`, not guessed, for several livestock coordinates** (some pig/goat/cattle records) where the source paper's exact reference assembly wasn't confirmed from the text available. Confirm against the current species assembly before using these for real design work.
+- **No automated re-validation against updated genome assemblies.** Coordinates are recorded as reported in the source paper; a dm3→dm6 (or GRCh37→GRCh38) liftover pass is future work, not done automatically.
+- **Confidence tiers are a proxy for evidence directness, not a statistical measure.** "High" means the coordinate/finding was read directly from primary-source full text; it is not a calibrated probability.
 
 ## License / terms
 
-Registry data is a protected compilation; extraction or substantial reuse outside the platform requires prior permission — see the terms shown on first visit to the live site.
+The source code in this repository (frontend + SQL migrations) is MIT-licensed — see [`LICENSE`](LICENSE).
+
+The catalog and registry **data** served by the live application is a separately maintained compilation with its own usage terms: extraction, redistribution, or substantial reuse outside the platform requires prior written permission from the maintainer — see the terms shown on first visit to the live site.
+
+## Citation
+
+If you use EpiLog in your work, please cite via the archived release: [10.5281/zenodo.21996453](https://doi.org/10.5281/zenodo.21996453) (see [`CITATION.cff`](CITATION.cff)).
 
 ## Author
 
-Manuel Paiva Sequeira — biochemistry student, FCT/UNL. Built independently, not affiliated with any institution.
+Manuel Afonso de Paiva Menezes de Sequeira — biochemistry student, FCT/UNL. Built independently, not affiliated with any institution.
