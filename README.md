@@ -1,6 +1,6 @@
 # EpiLog
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21996453.svg)](https://doi.org/10.5281/zenodo.21996453)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21996604.svg)](https://doi.org/10.5281/zenodo.21996604)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **A curated, literature-derived catalog of genomic safe harbor loci and post-edit silencing outcomes — plus a shared registry for tracking gene-editing experiments over time.**
@@ -75,7 +75,7 @@ The catalog and registry **data** served by the live application is a separately
 
 ## Citation
 
-If you use EpiLog in your work, please cite via the archived release: [10.5281/zenodo.21996453](https://doi.org/10.5281/zenodo.21996453) (see [`CITATION.cff`](CITATION.cff)).
+If you use EpiLog in your work, please cite via the archived release: [10.5281/zenodo.21996604](https://doi.org/10.5281/zenodo.21996604) (see [`CITATION.cff`](CITATION.cff)).
 
 ## Author
 

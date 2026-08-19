@@ -15,6 +15,7 @@ authors:
 repository-code: "https://github.com/stardrako-create/EpiLog"
 url: "https://epilogbio.netlify.app"
 license: MIT
+doi: 10.5281/zenodo.21996604
 keywords:
   - genomic safe harbor
   - AAVS1
@@ -24,4 +25,4 @@ keywords:
   - gene editing
   - epigenetics
   - genome engineering
-date-released: "2026-08-18"
+date-released: "2026-08-19"
