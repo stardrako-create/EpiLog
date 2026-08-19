@@ -635,14 +635,22 @@
   function populateCatalogFilters(rows) {
     var speciesSel = document.getElementById("catalog-species-filter");
     var combos = Array.from(new Set(rows.map(function (r) { return (r.species || "") + COMBO_SEP + (r.genome_build || ""); })))
-      .sort(function (a, b) { return a.localeCompare(b); });
-    combos.forEach(function (combo) {
-      var parts = combo.split(COMBO_SEP);
-      var sp = parts[0], build = parts[1];
-      if (!sp) { return; }
+      .map(function (combo) {
+        var parts = combo.split(COMBO_SEP);
+        var sp = parts[0], build = parts[1];
+        var label = scientificName(sp) + (build ? " (" + build + ")" : " (build not specified)");
+        return { combo: combo, sp: sp, label: label };
+      })
+      // Sort by the displayed scientific name, not the raw stored species
+      // string (e.g. "Dog"/"Goat") -- those two orderings genuinely differ
+      // (Capra hircus sorts right after Canis lupus familiaris, but "Goat"
+      // sorts nowhere near "Dog").
+      .sort(function (a, b) { return a.label.localeCompare(b.label); });
+    combos.forEach(function (c) {
+      if (!c.sp) { return; }
       var opt = document.createElement("option");
-      opt.value = combo;
-      opt.textContent = scientificName(sp) + (build ? " (" + build + ")" : " (build not specified)");
+      opt.value = c.combo;
+      opt.textContent = c.label;
       speciesSel.appendChild(opt);
     });
   }
@@ -711,7 +719,9 @@
         '<td class="catalog-evidence">' + evidenceCell + '</td>' +
         '<td class="catalog-source">' + (r.source_pmid
           ? '<a class="pmid-link" href="https://pubmed.ncbi.nlm.nih.gov/' + r.source_pmid + '/" target="_blank" rel="noopener noreferrer" title="' + (r.source_title ? r.source_title.replace(/"/g, "&quot;") : "") + '">PMID ' + r.source_pmid + '</a>'
-          : "—") + '</td>';
+          : (r.source_doi
+            ? '<a class="pmid-link" href="' + r.source_doi + '" target="_blank" rel="noopener noreferrer" title="' + (r.source_title ? r.source_title.replace(/"/g, "&quot;") : "") + '">Source ↗</a>'
+            : "—")) + '</td>';
       body.appendChild(tr);
     });
 
