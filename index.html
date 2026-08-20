@@ -108,6 +108,13 @@
   .tab:hover { color: var(--text); }
   .tab.active { background: var(--surface); color: var(--accent-strong); box-shadow: var(--shadow); }
   .tab:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .auth-status { display: flex; align-items: center; gap: var(--space-3); }
+  .auth-label { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+  .cta-line { font-size: 14px; color: var(--text-muted); margin-bottom: var(--space-4); padding: 10px 14px; border: 1px dashed var(--border); border-radius: var(--radius); }
+  .consent-ask { background: var(--surface-2); border-radius: var(--radius); padding: 14px 16px; font-size: 13px; color: var(--text-muted); }
+  .share-link-row { display: flex; align-items: center; gap: var(--space-3); padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .share-link-row:last-child { border-bottom: none; }
+  .share-link-url { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .panel { display: none; }
   .panel.active { display: block; }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--space-5); }
@@ -223,11 +230,11 @@
     </div>
     <div class="consent-body">
       <h3>What this is</h3>
-      <p>EpiLog is a shared, pilot-stage registry of gene-editing loci and their expression outcome over time — mainly post-insertion epigenetic silencing. It is maintained for internal research use among invited labs.</p>
+      <p>EpiLog's public Catalog tab is a curated, literature-derived database, open to everyone. The registry (New Experiment / Check-in / Records) is different: it's a private, per-account log — an account is required, and every account only ever sees its own entries, published or not. Nobody else, including other registered labs, can see your registry data unless you choose to share it.</p>
       <h3>What you agree to by using this</h3>
-      <p>Data you submit (locus, species, edit type, check-in results) becomes part of a shared database, used for aggregate analysis and to improve the automatic annotations returned to all users.</p>
-      <p>You may not extract, redistribute, republish, or substantially reuse data obtained through this platform outside of it, in whole or in part, without prior written permission. This database is a protected compilation (including under the EU's sui generis database right); unauthorized extraction or reuse of a substantial part of its content constitutes infringement.</p>
-      <p>There is no guarantee of accuracy for aggregated data — this is a collaborative, beta-stage registry, not a clinically validated resource.</p>
+      <p>Data you submit to the registry (locus, species, edit type, check-in results) is stored under your account only. It is not shared with other accounts, aggregated into the public catalog, or used to improve annotations returned to other users, unless you explicitly choose to publish a specific entry.</p>
+      <p>The public Catalog (the literature-derived data, not your private registry entries) is a protected compilation (including under the EU's sui generis database right); you may not extract, redistribute, republish, or substantially reuse a substantial part of its content outside this platform without prior written permission.</p>
+      <p>There is no guarantee of accuracy for either the catalog or registry data — this is a collaborative, beta-stage resource, not a clinically validated one.</p>
       <h3>Questions or data removal</h3>
       <p>Contact the project lead for removal requests or clarifications.</p>
     </div>
@@ -256,10 +263,39 @@
       <button class="tab" data-tab="records" role="tab" aria-selected="false">Records</button>
       <button class="tab" data-tab="catalog" role="tab" aria-selected="false">Catalog</button>
     </nav>
+    <div class="auth-status" id="auth-status">
+      <button type="button" class="btn" id="btn-show-auth">Sign in</button>
+    </div>
   </header>
 
   <main>
+    <section id="panel-auth" class="panel">
+      <div class="card" style="max-width:420px;">
+        <p class="group-label">Registry access</p>
+        <p class="hint">The registry (New Experiment / Check-in / Records) is private per account — you can only ever see your own entries, never another lab's. The <strong>Catalog</strong> tab stays fully public, no account needed.</p>
+        <form id="form-signin" autocomplete="off">
+          <div class="field">
+            <label for="auth-email">Email</label>
+            <input type="email" id="auth-email" required="required" />
+          </div>
+          <div class="field">
+            <label for="auth-password">Password</label>
+            <input type="password" id="auth-password" required="required" minlength="6" />
+          </div>
+          <div class="field" id="auth-institution-field" style="display:none;">
+            <label for="auth-institution">Institution</label>
+            <input type="text" id="auth-institution" placeholder="e.g. NOVA FCT, VIB-KU Leuven..." />
+          </div>
+          <div class="consent-footer" style="justify-content:flex-start; gap:8px;">
+            <button type="submit" class="btn btn-primary" id="btn-signin">Sign in</button>
+            <button type="button" class="btn" id="btn-toggle-signup">Need an account? Sign up</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
     <section id="panel-new" class="panel active">
+      <p class="cta-line">Don't let the data go to waste — log your safe harbor experiments, even (especially) the ones that silenced or failed. Everything you upload is private to your account by default — nobody can see it, copy it, or scoop it unless you generate a share link and hand it out yourself. You're always protected.</p>
       <form id="form-new" class="card" autocomplete="off">
         <div class="group">
           <p class="group-label">Locus</p>
@@ -376,6 +412,13 @@
           </div>
         </div>
 
+        <div class="group consent-ask">
+          <label class="consent-check" style="align-items:flex-start;">
+            <input type="checkbox" id="new-agg-consent" style="margin-top:3px;" />
+            <span>Whatever happens with this locus stays yours, full stop. But if it turns out to be a dead end for you — would it be crazy to let that quietly save some other lab six months on the same coordinates? Anonymized, aggregated, your name and your exact locus never attached to anything.</span>
+          </label>
+        </div>
+
         <div class="actions">
           <button type="submit" class="btn btn-primary" id="btn-new-submit">Register experiment</button>
           <span class="hint">Takes less than a minute.</span>
@@ -436,6 +479,13 @@
           </div>
         </div>
 
+        <div class="group consent-ask">
+          <label class="consent-check" style="align-items:flex-start;">
+            <input type="checkbox" id="checkin-agg-consent" style="margin-top:3px;" />
+            <span>If this one silenced — that's not a failed experiment, that's data nobody else has. Would it be crazy not to let it count? Anonymized, aggregated, never with your name or your exact locus attached — just a number that makes the model a little smarter for the next lab.</span>
+          </label>
+        </div>
+
         <div class="actions">
           <button type="submit" class="btn btn-primary" id="btn-checkin-submit">Save check-in</button>
           <span class="hint">Three clicks: days, state, assay.</span>
@@ -444,6 +494,18 @@
     </section>
 
     <section id="panel-records" class="panel">
+      <div class="card" style="margin-bottom: var(--space-5);">
+        <p class="group-label">Share with other labs</p>
+        <p class="hint">Your data stays private by default. Create a personal link to give someone read-only access to your entries — revoke it any time to cut access immediately.</p>
+        <div class="grid-2" style="align-items:end;">
+          <div class="field">
+            <label for="share-label">Label (optional)</label>
+            <input type="text" id="share-label" placeholder="e.g. Aerts Lab" />
+          </div>
+          <button type="button" class="btn btn-primary" id="btn-create-share">Create share link</button>
+        </div>
+        <div id="share-links-list" style="margin-top: var(--space-4);"></div>
+      </div>
       <div class="summary-row" id="summary-row"></div>
       <div class="table-wrap">
         <table>
@@ -461,6 +523,21 @@
             </tr>
           </thead>
           <tbody id="records-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="panel-shared" class="panel">
+      <div class="static-summary" id="shared-view-header"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Species / build</th><th>Coords</th><th>Gene</th><th>Edit type</th>
+              <th>Tissue</th><th>Donor age</th><th>Latest state</th><th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="shared-body"></tbody>
         </table>
       </div>
     </section>
@@ -536,7 +613,225 @@
   var stateLabel = { active: "Active", partial: "Partial", silenced: "Silenced" };
   var records = [];
 
+  // ---- Auth: self-signup accounts, registry data private per-account ----
+  // The Catalog tab (known_safe_harbors) needs no login -- only New Experiment /
+  // Check-in / Records do, since those are the private registry tables (RLS
+  // enforces "only your own rows" server-side; this gating is just UX so people
+  // aren't staring at empty forms wondering why nothing saves).
+  var currentUser = null;
+  var isSignupMode = false;
+  var REGISTRY_TABS = ["new", "checkin", "records"];
+
+  function setAuthUI(user, institution) {
+    currentUser = user;
+    var status = document.getElementById("auth-status");
+    if (user) {
+      status.innerHTML = "";
+      var label = document.createElement("span");
+      label.className = "auth-label";
+      label.textContent = (institution ? institution : user.email);
+      var out = document.createElement("button");
+      out.type = "button";
+      out.className = "btn";
+      out.textContent = "Sign out";
+      out.addEventListener("click", async function () {
+        await sb.auth.signOut();
+        setAuthUI(null);
+        showRegistryTab("new");
+      });
+      status.appendChild(label);
+      status.appendChild(out);
+    } else {
+      status.innerHTML = '<button type="button" class="btn" id="btn-show-auth">Sign in</button>';
+      document.getElementById("btn-show-auth").addEventListener("click", function () { showPanel("auth"); });
+    }
+  }
+
+  function showPanel(name) {
+    tabsEls().panels.forEach(function (p) { p.classList.remove("active"); });
+    var panel = document.getElementById("panel-" + name);
+    if (panel) { panel.classList.add("active"); }
+  }
+
+  function showRegistryTab(name) {
+    // Route to the real tab if logged in, otherwise show the sign-in panel
+    // without losing which tab the user actually meant to land on.
+    document.querySelectorAll(".tab").forEach(function (t) {
+      t.classList.toggle("active", t.dataset.tab === name);
+      t.setAttribute("aria-selected", t.dataset.tab === name ? "true" : "false");
+    });
+    if (REGISTRY_TABS.indexOf(name) !== -1 && !currentUser) {
+      showPanel("auth");
+      return;
+    }
+    showPanel(name);
+    if (name === "checkin") { loadRecords().then(populateExpSelect); }
+    if (name === "records") { loadRecords().then(renderRecords); loadShareLinks(); }
+    if (name === "catalog") { loadCatalog(); }
+  }
+
+  // ---- Share links: opt-in, read-only, per-user ----
+  async function loadShareLinks() {
+    if (!sb || !currentUser) { return; }
+    var list = document.getElementById("share-links-list");
+    var res = await sb.from("share_links").select("*").order("created_at", { ascending: false });
+    if (res.error) { return; }
+    list.innerHTML = "";
+    if (!res.data.length) {
+      list.innerHTML = '<p class="hint">No share links yet.</p>';
+      return;
+    }
+    res.data.forEach(function (link) {
+      var row = document.createElement("div");
+      row.className = "share-link-row";
+      var url = location.origin + location.pathname + "?share=" + link.token;
+      row.innerHTML =
+        '<span>' + (link.label || "(untitled)") + (link.active ? "" : " — <em>revoked</em>") + '</span>' +
+        '<span class="share-link-url">' + url + '</span>' +
+        (link.active
+          ? '<button type="button" class="btn" data-copy="' + url + '">Copy</button>' +
+            '<button type="button" class="btn" data-revoke="' + link.id + '">Revoke</button>'
+          : "");
+      list.appendChild(row);
+    });
+    list.querySelectorAll("[data-copy]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        navigator.clipboard.writeText(b.dataset.copy);
+        showToast("Link copied.");
+      });
+    });
+    list.querySelectorAll("[data-revoke]").forEach(function (b) {
+      b.addEventListener("click", async function () {
+        await sb.from("share_links").update({ active: false }).eq("id", b.dataset.revoke);
+        showToast("Link revoked.");
+        loadShareLinks();
+      });
+    });
+  }
+
+  document.getElementById("btn-create-share").addEventListener("click", async function () {
+    if (!sb || !currentUser) { return; }
+    var label = document.getElementById("share-label").value.trim();
+    var res = await sb.from("share_links").insert({ user_id: currentUser.id, label: label || null });
+    if (res.error) { showToast("Error: " + res.error.message); return; }
+    document.getElementById("share-label").value = "";
+    showToast("Share link created.");
+    loadShareLinks();
+  });
+
+  // ---- Shared read-only view: ?share=<token> in the URL, no account needed ----
+  // Reuses the existing page shell (topbar, panel structure) instead of tearing
+  // down the DOM, so nothing else in the script has to guard against elements
+  // that no longer exist.
+  var SHARE_TOKEN = new URLSearchParams(location.search).get("share");
+
+  async function renderSharedView() {
+    document.querySelector(".tabs").style.display = "none";
+    document.getElementById("auth-status").style.display = "none";
+    document.querySelector(".brand-sub").textContent = "shared registry view (read-only)";
+    showPanel("shared");
+    var body = document.getElementById("shared-body");
+    var header = document.getElementById("shared-view-header");
+    if (!sb) { header.innerHTML = "<p>Not configured.</p>"; return; }
+    var res = await sb.rpc("get_shared_experiments", { p_token: SHARE_TOKEN });
+    if (res.error || !res.data || !res.data.length) {
+      header.innerHTML = "<p>No data, or this link has been revoked.</p>";
+      return;
+    }
+    header.innerHTML = "<p>Read-only view shared by another account — " + res.data.length + " experiment(s).</p>";
+    res.data.forEach(function (r) {
+      var checkins = r.checkins || [];
+      var latest = checkins.length ? checkins[checkins.length - 1] : null;
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        "<td>" + r.species + " / " + (r.genome_build || "—") + "</td>" +
+        "<td>" + r.coords + "</td><td>" + r.gene + "</td><td>" + r.edit_type + "</td>" +
+        "<td>" + r.tissue + "</td><td>" + formatAge(r.donor_age_days) + "</td>" +
+        "<td>" + (latest ? (stateLabel[latest.state] || latest.state) + " (day " + latest.day + ")" : "—") + "</td>" +
+        "<td>" + (r.notes || "—") + "</td>";
+      body.appendChild(tr);
+    });
+  }
+
+  function tabsEls() {
+    return { tabs: document.querySelectorAll(".tab"), panels: document.querySelectorAll(".panel") };
+  }
+
+  document.getElementById("btn-toggle-signup").addEventListener("click", function () {
+    isSignupMode = !isSignupMode;
+    document.getElementById("auth-institution-field").style.display = isSignupMode ? "block" : "none";
+    document.getElementById("auth-consent-field").style.display = isSignupMode ? "block" : "none";
+    document.getElementById("btn-signin").textContent = isSignupMode ? "Sign up" : "Sign in";
+    this.textContent = isSignupMode ? "Already have an account? Sign in" : "Need an account? Sign up";
+  });
+
+  document.getElementById("form-signin").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (!sb) { showToast("Connect Supabase first (yellow banner at the top)."); return; }
+    var email = document.getElementById("auth-email").value;
+    var password = document.getElementById("auth-password").value;
+    var btn = document.getElementById("btn-signin");
+    btn.disabled = true;
+    if (isSignupMode) {
+      var institution = document.getElementById("auth-institution").value.trim();
+      if (!institution) { showToast("Institution is required to sign up."); btn.disabled = false; return; }
+      var res = await sb.auth.signUp({ email: email, password: password });
+      if (res.error) { showToast("Error: " + res.error.message); btn.disabled = false; return; }
+      if (res.data.user) {
+        var profRes = await sb.from("profiles").insert({ id: res.data.user.id, institution: institution });
+        if (profRes.error) { showToast("Account created, but profile save failed: " + profRes.error.message); }
+      }
+      showToast(res.data.session ? "Account created." : "Account created — check your email to confirm.");
+      if (res.data.session) { await onSignedIn(); }
+    } else {
+      var res2 = await sb.auth.signInWithPassword({ email: email, password: password });
+      btn.disabled = false;
+      if (res2.error) { showToast("Error: " + res2.error.message); return; }
+      await onSignedIn();
+    }
+    btn.disabled = false;
+  });
+
+  // Reflects the account's current aggregate-use preference so the checkbox
+  // on New Experiment / Check-in starts wherever they last left it, instead
+  // of asking from a blank slate every single time.
+  var currentAggConsent = false;
+
+  function applyAggConsentDefault() {
+    var a = document.getElementById("new-agg-consent");
+    var b = document.getElementById("checkin-agg-consent");
+    if (a) { a.checked = currentAggConsent; }
+    if (b) { b.checked = currentAggConsent; }
+  }
+
+  async function onSignedIn() {
+    var userRes = await sb.auth.getUser();
+    var user = userRes.data && userRes.data.user;
+    if (!user) { return; }
+    var profRes = await sb.from("profiles").select("institution, allow_aggregate_use").eq("id", user.id).maybeSingle();
+    setAuthUI(user, profRes.data ? profRes.data.institution : null);
+    currentAggConsent = !!(profRes.data && profRes.data.allow_aggregate_use);
+    applyAggConsentDefault();
+    document.getElementById("form-signin").reset();
+    showRegistryTab("new");
+  }
+
+  async function initAuth() {
+    if (!sb) { return; }
+    var sessionRes = await sb.auth.getSession();
+    var session = sessionRes.data && sessionRes.data.session;
+    if (session && session.user) {
+      var profRes = await sb.from("profiles").select("institution, allow_aggregate_use").eq("id", session.user.id).maybeSingle();
+      setAuthUI(session.user, profRes.data ? profRes.data.institution : null);
+      currentAggConsent = !!(profRes.data && profRes.data.allow_aggregate_use);
+      applyAggConsentDefault();
+    } else {
+      setAuthUI(null);
+    }
+  }
+
   (function () {
+    if (SHARE_TOKEN) { return; }
     var CONSENT_KEY = "epilog_consent_v1";
     if (localStorage.getItem(CONSENT_KEY) === "accepted") { return; }
     var overlay = document.getElementById("consent-overlay");
@@ -567,20 +862,10 @@
     }
   });
 
-  var tabs = document.querySelectorAll(".tab");
-  var panels = document.querySelectorAll(".panel");
-  tabs.forEach(function (tab) {
-    tab.addEventListener("click", function () {
-      tabs.forEach(function (t) { t.classList.remove("active"); t.setAttribute("aria-selected", "false"); });
-      panels.forEach(function (p) { p.classList.remove("active"); });
-      tab.classList.add("active");
-      tab.setAttribute("aria-selected", "true");
-      document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
-      if (tab.dataset.tab === "checkin") { loadRecords().then(populateExpSelect); }
-      if (tab.dataset.tab === "records") { loadRecords().then(renderRecords); }
-      if (tab.dataset.tab === "catalog") { loadCatalog(); }
-    });
+  document.querySelectorAll(".tab").forEach(function (tab) {
+    tab.addEventListener("click", function () { showRegistryTab(tab.dataset.tab); });
   });
+  if (SHARE_TOKEN) { renderSharedView(); } else { initAuth(); }
 
   function showToast(msg) {
     var toast = document.getElementById("toast");
@@ -769,9 +1054,17 @@
     var res = await sb.from("experiments").insert(payload);
     btn.disabled = false;
     if (res.error) { showToast("Error: " + res.error.message); return; }
+    await saveAggConsentIfChanged(document.getElementById("new-agg-consent").checked);
     this.reset();
-    showToast("Registered.");
+    applyAggConsentDefault();
+    showToast("Thanks for logging it — every result helps, negative ones especially.");
   });
+
+  async function saveAggConsentIfChanged(checked) {
+    if (!currentUser || checked === currentAggConsent) { return; }
+    currentAggConsent = checked;
+    await sb.from("profiles").update({ allow_aggregate_use: checked }).eq("id", currentUser.id);
+  }
 
   var selectedDay = null;
   document.getElementById("day-segments").addEventListener("click", function (e) {
@@ -824,12 +1117,14 @@
     });
     btn.disabled = false;
     if (res.error) { showToast("Error: " + res.error.message); return; }
+    await saveAggConsentIfChanged(document.getElementById("checkin-agg-consent").checked);
     this.reset();
     document.querySelectorAll("#day-segments .seg-btn, .state-btn").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
     document.getElementById("custom-day-field").style.display = "none";
+    applyAggConsentDefault();
     selectedDay = null;
     selectedState = null;
-    showToast("Check-in saved.");
+    showToast("Check-in saved — thanks for keeping the timeline honest.");
   });
 
   function renderRecords() {

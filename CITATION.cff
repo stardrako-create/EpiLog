@@ -6,8 +6,9 @@ abstract: >-
   post-editing expression/silencing outcomes, with per-record confidence
   tiers, stability/duration summaries, tissue context, and genome-build
   annotations, spanning human, mouse, dog, pig, goat, cattle, zebrafish, and
-  Drosophila melanogaster. It also provides a shared registry for logging new
-  gene-editing experiments and tracking silencing status over time.
+  Drosophila melanogaster. It also provides a private, per-account registry
+  for logging new gene-editing experiments and tracking silencing status over
+  time.
 authors:
   - family-names: "de Paiva Menezes de Sequeira"
     given-names: "Manuel Afonso"

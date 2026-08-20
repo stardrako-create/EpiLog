@@ -3,7 +3,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21996604.svg)](https://doi.org/10.5281/zenodo.21996604)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**A curated, literature-derived catalog of genomic safe harbor loci and post-edit silencing outcomes — plus a shared registry for tracking gene-editing experiments over time.**
+**A curated, literature-derived catalog of genomic safe harbor loci and post-edit silencing outcomes — plus a private, per-account registry for tracking gene-editing experiments over time.**
 
 Live: [epilogbio.netlify.app](https://epilogbio.netlify.app)
 
@@ -16,7 +16,7 @@ Genomic "safe harbors" — loci like AAVS1, ROSA26, or H11 where a transgene can
 EpiLog does two things:
 
 1. **Catalog** — a public, searchable database of known safe harbor loci, built by systematically mining the primary literature (not just relying on review-article summaries) and recording, per record: the exact evidence, a confidence tier reflecting how directly that evidence was extracted, a stability/duration summary, and tissue context — because "safe" is not a fixed property of a coordinate, it's a claim that only holds in a specific tissue, measured a specific way.
-2. **Registry** — a shared, editable log where labs can register their own gene-editing loci and check in on silencing status over time (active / partial / silenced), building a real dataset of what actually happens post-edit, not just what the founding papers reported.
+2. **Registry** — a private, per-account log where labs register their own gene-editing loci and check in on silencing status over time (active / partial / silenced), building a real dataset of what actually happens post-edit, not just what the founding papers reported. Self-signup account required (email + institution); each account can only ever see its own entries, published or not — this protects labs from being scooped on unpublished results while they're still working on them.
 
 Built originally to help find a safe harbor locus in *Canis lupus familiaris* (dog) — a species with essentially no published safe-harbor characterization, which is itself one of the catalog's findings, not a search failure.
 
@@ -39,7 +39,7 @@ A few deliberate choices, and the reasoning behind them:
 
 - Single-file static frontend (`epilog-live.html`) — vanilla JS, no build step, no framework
 - [Supabase](https://supabase.com) (Postgres + Row Level Security) as the backend
-  - Public-writable tables for the registry (`experiments`, `checkins`)
+  - Private, per-account tables for the registry (`experiments`, `checkins`) — Supabase Auth (self-signup) + row-level security scoped to `auth.uid()`, so each account only ever reads/writes its own rows, never another account's
   - Curation-only staging table (`public_safe_harbors_staging`) with no public policies — new literature findings land here first
   - Public, read-only catalog table (`known_safe_harbors`) — promoted from staging only after review
 - Hosted on [Netlify](https://netlify.com)
