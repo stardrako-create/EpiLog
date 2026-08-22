@@ -506,6 +506,25 @@
         </div>
         <div id="share-links-list" style="margin-top: var(--space-4);"></div>
       </div>
+      <div class="card" style="margin-bottom: var(--space-5);">
+        <p class="group-label">Check if a locus is already known</p>
+        <p class="hint">Personal to your account — never a public table, never someone else's raw entry. Just a count and whether it tends to silence, earned by your own contributions.</p>
+        <div class="grid-2" style="align-items:end;">
+          <div class="field">
+            <label for="lookup-coords">Coordinates</label>
+            <input type="text" id="lookup-coords" placeholder="e.g. chr19:55,627,120-55,627,850" />
+          </div>
+          <div class="field">
+            <label for="lookup-cellmodel">Cell model</label>
+            <input type="text" id="lookup-cellmodel" list="cell-models" placeholder="e.g. HEK293T" />
+          </div>
+        </div>
+        <div class="actions" style="margin-top: var(--space-3);">
+          <button type="button" class="btn btn-primary" id="btn-lookup">Check aggregate</button>
+          <span class="hint" id="lookup-credit-hint"></span>
+        </div>
+        <div id="lookup-result" style="margin-top: var(--space-3);"></div>
+      </div>
       <div class="summary-row" id="summary-row"></div>
       <div class="table-wrap">
         <table>
@@ -1181,8 +1200,61 @@
       '<div class="stat"><div class="n">' + records.length + '</div><div class="l">experiments registered</div></div>' +
       '<div class="stat"><div class="n" style="color:var(--good)">' + counts.active + '</div><div class="l">active</div></div>' +
       '<div class="stat"><div class="n" style="color:var(--warn)">' + counts.partial + '</div><div class="l">partial</div></div>' +
-      '<div class="stat"><div class="n" style="color:var(--bad)">' + counts.silenced + '</div><div class="l">silenced</div></div>';
+      '<div class="stat"><div class="n" style="color:var(--bad)">' + counts.silenced + '</div><div class="l">silenced</div></div>' +
+      '<div class="stat"><div class="n" id="credit-balance-n">…</div><div class="l">your lookup credits</div></div>';
+    refreshCreditBalance();
   }
+
+  // Personal only -- calls my_credit_balance(), which is scoped server-side
+  // to auth.uid() via RLS on credit_ledger. Never shows anyone else's
+  // numbers, never a cross-account list.
+  async function refreshCreditBalance() {
+    var el = document.getElementById("credit-balance-n");
+    var hint = document.getElementById("lookup-credit-hint");
+    if (!sb || !currentUser) { return; }
+    var res = await sb.rpc("my_credit_balance");
+    var row = res.data && res.data[0];
+    var balance = row ? row.balance : 0;
+    if (el) { el.textContent = balance; }
+    if (hint) {
+      hint.textContent = balance > 0
+        ? balance + " lookup" + (balance === 1 ? "" : "s") + " available"
+        : "No credits yet — log a fully-filled-out experiment with a follow-up check-in to earn one.";
+    }
+  }
+
+  document.getElementById("btn-lookup").addEventListener("click", async function () {
+    if (!sb) { showToast("Connect Supabase first (yellow banner at the top)."); return; }
+    if (!currentUser) { showToast("Sign in to check the aggregate — it's tied to your own earned credits."); return; }
+    var coords = document.getElementById("lookup-coords").value.trim();
+    var cellModel = document.getElementById("lookup-cellmodel").value.trim();
+    var resultBox = document.getElementById("lookup-result");
+    if (!coords || !cellModel) {
+      resultBox.innerHTML = '<p class="hint">Enter both coordinates and a cell model.</p>';
+      return;
+    }
+    var btn = this;
+    btn.disabled = true;
+    var res = await sb.rpc("lookup_locus_aggregate", { p_coords: coords, p_cell_model: cellModel });
+    btn.disabled = false;
+    if (res.error) {
+      if (res.error.message && res.error.message.indexOf("no_credits") !== -1) {
+        resultBox.innerHTML = '<p class="hint">Out of credits — log a fully-filled-out experiment with a follow-up check-in to earn another.</p>';
+      } else {
+        resultBox.innerHTML = '<p class="hint">Error: ' + res.error.message + '</p>';
+      }
+      return;
+    }
+    var row = res.data && res.data[0];
+    if (!row || row.n === null || row.n === undefined) {
+      resultBox.innerHTML = '<p class="hint">Nothing in the pool yet for that pair — either genuinely untried, or too few contributions so far to show anything (never shown below 3, to keep any single lab from being identifiable).</p>';
+    } else {
+      resultBox.innerHTML =
+        '<p class="hint"><strong>' + row.n + '</strong> independent contributions for that locus/cell model. <strong>' +
+        row.silenced_within_8w + '</strong> reported silencing within 8 weeks.</p>';
+    }
+    refreshCreditBalance();
+  });
 
   loadRecords().then(renderRecords);
 </script>
