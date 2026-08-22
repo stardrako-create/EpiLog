@@ -1,7 +1,7 @@
 # EpiLog
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21996604.svg)](https://doi.org/10.5281/zenodo.21996604)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
 
 **A curated, literature-derived catalog of genomic safe harbor loci and post-edit silencing outcomes — plus a private, per-account registry for tracking gene-editing experiments over time.**
 
@@ -69,7 +69,7 @@ Being upfront about what's incomplete, rather than hiding it:
 
 ## License / terms
 
-The source code in this repository (frontend + SQL migrations) is MIT-licensed — see [`LICENSE`](LICENSE).
+The source code in this repository (frontend + SQL migrations) is licensed under [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0) — see [`LICENSE`](LICENSE). You're free to read it, run it, and build on it for noncommercial purposes; redistributing it (as-is or modified, including as a competing service) requires the same license terms to travel with it, and commercial use requires contacting the author directly.
 
 The catalog and registry **data** served by the live application is a separately maintained compilation with its own usage terms: extraction, redistribution, or substantial reuse outside the platform requires prior written permission from the maintainer — see the terms shown on first visit to the live site.
 
