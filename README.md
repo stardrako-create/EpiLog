@@ -5,7 +5,7 @@
 
 **A curated, literature-derived catalog of genomic safe harbor loci and post-edit silencing outcomes — plus a private, per-account registry for tracking gene-editing experiments over time.**
 
-Live: [epilogbio.netlify.app](https://epilogbio.netlify.app)
+Live: [locusatlas.netlify.app](https://locusatlas.netlify.app)
 
 ---
 

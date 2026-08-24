@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://epilogbio.netlify.app/sitemap.xml
+Sitemap: https://locusatlas.netlify.app/sitemap.xml
