@@ -3,24 +3,24 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>EpiLog — Genomic Safe Harbor Catalog &amp; Silencing Registry</title>
-<meta name="description" content="EpiLog is a curated, literature-derived catalog of genomic safe harbor loci (AAVS1, ROSA26, H11, CCR5, CLYBL, Drosophila attP/VK landing sites, and more) and a registry for tracking gene-editing silencing outcomes over time, across human, mouse, dog, pig, goat, cattle, zebrafish, and Drosophila melanogaster." />
+<title>LocusAtlas — Genomic Safe Harbor Catalog &amp; Silencing Registry</title>
+<meta name="description" content="LocusAtlas (formerly EpiLog) is a curated, literature-derived catalog of genomic safe harbor loci (AAVS1, ROSA26, H11, CCR5, CLYBL, Drosophila attP/VK landing sites, and more) and a registry for tracking gene-editing silencing outcomes over time, across human, mouse, dog, pig, goat, cattle, zebrafish, and Drosophila melanogaster." />
 <meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://epilogbio.netlify.app/" />
 
 <meta property="og:type" content="website" />
-<meta property="og:title" content="EpiLog — Genomic Safe Harbor Catalog & Silencing Registry" />
+<meta property="og:title" content="LocusAtlas — Genomic Safe Harbor Catalog & Silencing Registry" />
 <meta property="og:description" content="A curated, literature-derived catalog of genomic safe harbor loci and post-edit silencing outcomes, spanning human, mouse, dog, pig, goat, cattle, zebrafish, and Drosophila." />
 <meta property="og:url" content="https://epilogbio.netlify.app/" />
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="EpiLog — Genomic Safe Harbor Catalog & Silencing Registry" />
+<meta name="twitter:title" content="LocusAtlas — Genomic Safe Harbor Catalog & Silencing Registry" />
 <meta name="twitter:description" content="A curated, literature-derived catalog of genomic safe harbor loci and post-edit silencing outcomes, spanning human, mouse, dog, pig, goat, cattle, zebrafish, and Drosophila." />
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Dataset",
-  "name": "EpiLog Genomic Safe Harbor Catalog",
+  "name": "LocusAtlas Genomic Safe Harbor Catalog",
   "description": "A curated, literature-derived catalog of genomic safe harbor loci (e.g. AAVS1, ROSA26, H11, CCR5, CLYBL, and Drosophila melanogaster attP/VK landing sites) and their post-editing silencing/expression outcomes, with per-tissue, per-confidence, and genome-build annotations, spanning human, mouse, dog, pig, goat, cattle, zebrafish, and Drosophila.",
   "url": "https://epilogbio.netlify.app/",
   "keywords": ["genomic safe harbor", "AAVS1", "ROSA26", "H11", "CCR5", "CLYBL", "CRISPR", "transgene silencing", "gene editing", "epigenetics", "Drosophila attP", "genome engineering", "genomic safe harbor dog", "genomic safe harbor canine"],
@@ -230,7 +230,7 @@
     </div>
     <div class="consent-body">
       <h3>What this is</h3>
-      <p>EpiLog's public Catalog tab is a curated, literature-derived database, open to everyone. The registry (New Experiment / Check-in / Records) is different: it's a private, per-account log — an account is required, and every account only ever sees its own entries, published or not. Nobody else, including other registered labs, can see your registry data unless you choose to share it.</p>
+      <p>LocusAtlas's public Catalog tab is a curated, literature-derived database, open to everyone. The registry (New Experiment / Check-in / Records) is different: it's a private, per-account log — an account is required, and every account only ever sees its own entries, published or not. Nobody else, including other registered labs, can see your registry data unless you choose to share it.</p>
       <h3>What you agree to by using this</h3>
       <p>Data you submit to the registry (locus, species, edit type, check-in results) is stored under your account only. It is not shared with other accounts, aggregated into the public catalog, or used to improve annotations returned to other users, unless you explicitly choose to publish a specific entry.</p>
       <p>The public Catalog (the literature-derived data, not your private registry entries) is a protected compilation (including under the EU's sui generis database right); you may not extract, redistribute, republish, or substantially reuse a substantial part of its content outside this platform without prior written permission.</p>
@@ -563,7 +563,7 @@
 
     <section id="panel-catalog" class="panel">
       <div class="static-summary">
-        <p>EpiLog maintains a curated, literature-derived catalog of genomic safe harbor loci and their post-editing expression/silencing outcomes. The interactive table below loads live from the database once you search or filter; for reference, some of the loci currently catalogued include:</p>
+        <p>LocusAtlas maintains a curated, literature-derived catalog of genomic safe harbor loci and their post-editing expression/silencing outcomes. The interactive table below loads live from the database once you search or filter; for reference, some of the loci currently catalogued include:</p>
         <ul>
           <li><strong>AAVS1</strong> (human, 19q13.4) — the most extensively characterized human safe harbor; multiple studies show robust iPSC expression but tissue-dependent silencing after cardiomyocyte differentiation.</li>
           <li><strong>ROSA26</strong> (human, mouse, pig, goat, cattle orthologs) — a broadly conserved "quiet locus" used across species for stable transgene expression.</li>
@@ -851,7 +851,7 @@
 
   (function () {
     if (SHARE_TOKEN) { return; }
-    var CONSENT_KEY = "epilog_consent_v1";
+    var CONSENT_KEY = "locusatlas_consent_v1";
     if (localStorage.getItem(CONSENT_KEY) === "accepted") { return; }
     var overlay = document.getElementById("consent-overlay");
     var checkbox = document.getElementById("consent-checkbox");

@@ -6,7 +6,7 @@
 
 -- Note: the original insert used species = 'Canis lupus familiaris' directly,
 -- inconsistent with the rest of the catalog's convention (common names like
--- 'Dog', 'Human', 'Mouse' -- see SPECIES_SCIENTIFIC in epilog-live.html,
+-- 'Dog', 'Human', 'Mouse' -- see SPECIES_SCIENTIFIC in index.html,
 -- which translates those for display). Matching on the actual stored value
 -- here; the corrected insert file below now uses 'Dog' for consistency.
 delete from known_safe_harbors where evidence_type = 'computational' and species = 'Canis lupus familiaris';

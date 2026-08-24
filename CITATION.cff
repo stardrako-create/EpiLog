@@ -1,8 +1,8 @@
 cff-version: 1.2.0
-message: "If you use EpiLog in your work, please cite it as below."
-title: "EpiLog: A Curated Genomic Safe Harbor Catalog and Post-Edit Silencing Registry"
+message: "If you use LocusAtlas in your work, please cite it as below. Archived under the project's former name, EpiLog -- see repository-code and url for the current name/location; the DOI is permanent and was not reissued for the rename."
+title: "LocusAtlas: A Curated Genomic Safe Harbor Catalog and Post-Edit Silencing Registry"
 abstract: >-
-  EpiLog is a literature-derived catalog of genomic safe harbor loci and their
+  LocusAtlas (formerly EpiLog) is a literature-derived catalog of genomic safe harbor loci and their
   post-editing expression/silencing outcomes, with per-record confidence
   tiers, stability/duration summaries, tissue context, and genome-build
   annotations, spanning human, mouse, dog, pig, goat, cattle, zebrafish, and

@@ -1,4 +1,4 @@
-# EpiLog
+# LocusAtlas
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21996604.svg)](https://doi.org/10.5281/zenodo.21996604)
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
@@ -13,7 +13,7 @@ Live: [epilogbio.netlify.app](https://epilogbio.netlify.app)
 
 Genomic "safe harbors" — loci like AAVS1, ROSA26, or H11 where a transgene can be inserted without disrupting neighboring genes — are treated as interchangeable, plug-and-play tools across gene-editing labs. In practice, whether a locus is actually "safe" depends on species, genome assembly, cell type, and differentiation state: a locus that stays active in iPSCs can silence completely after differentiation into cardiomyocytes; the same nominal locus in two different tissues can differ 2-3x in expression; a coordinate from one genome build is not the same physical position in another.
 
-EpiLog does two things:
+LocusAtlas does two things:
 
 1. **Catalog** — a public, searchable database of known safe harbor loci, built by systematically mining the primary literature (not just relying on review-article summaries) and recording, per record: the exact evidence, a confidence tier reflecting how directly that evidence was extracted, a stability/duration summary, and tissue context — because "safe" is not a fixed property of a coordinate, it's a claim that only holds in a specific tissue, measured a specific way.
 2. **Registry** — a private, per-account log where labs register their own gene-editing loci and check in on silencing status over time (active / partial / silenced), building a real dataset of what actually happens post-edit, not just what the founding papers reported. Self-signup account required (email + institution); each account can only ever see its own entries, published or not — this protects labs from being scooped on unpublished results while they're still working on them.
@@ -37,7 +37,7 @@ A few deliberate choices, and the reasoning behind them:
 
 ## Stack
 
-- Single-file static frontend (`epilog-live.html`) — vanilla JS, no build step, no framework
+- Single-file static frontend (`index.html`) — vanilla JS, no build step, no framework
 - [Supabase](https://supabase.com) (Postgres + Row Level Security) as the backend
   - Private, per-account tables for the registry (`experiments`, `checkins`) — Supabase Auth (self-signup) + row-level security scoped to `auth.uid()`, so each account only ever reads/writes its own rows, never another account's
   - Curation-only staging table (`public_safe_harbors_staging`) with no public policies — new literature findings land here first
@@ -75,7 +75,7 @@ The catalog and registry **data** served by the live application is a separately
 
 ## Citation
 
-If you use EpiLog in your work, please cite via the archived release: [10.5281/zenodo.21996604](https://doi.org/10.5281/zenodo.21996604) (see [`CITATION.cff`](CITATION.cff)).
+If you use LocusAtlas in your work, please cite via the archived release: [10.5281/zenodo.21996604](https://doi.org/10.5281/zenodo.21996604) (see [`CITATION.cff`](CITATION.cff)). Archived under the project's former name, EpiLog — the DOI is permanent and was not reissued for the rename (see note in `CITATION.cff`).
 
 ## Author
 

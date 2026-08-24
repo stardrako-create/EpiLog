@@ -1,4 +1,4 @@
--- Explicit, opt-in (never pre-checked) consent per account: can EpiLog use
+-- Explicit, opt-in (never pre-checked) consent per account: can LocusAtlas use
 -- anonymized, aggregate statistics from this account's data to validate/
 -- improve the prediction model and demonstrate it to funders/industry
 -- partners? This is separate from and does NOT affect row-level privacy --
