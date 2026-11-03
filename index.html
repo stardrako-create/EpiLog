@@ -926,8 +926,13 @@
   async function loadCatalog() {
     if (!sb) { showToast("Connect Supabase first (yellow banner at the top)."); return; }
     if (catalogLoaded) { return; }
-    var res = await sb.from("known_safe_harbors").select("*").order("locus_name");
-    if (res.error) { showToast("Error loading catalog: " + res.error.message); return; }
+    var res;
+    try {
+      res = await sb.from("known_safe_harbors").select("*").order("locus_name");
+    } catch (err) {
+      res = { error: { message: String((err && err.message) || err) } };
+    }
+    if (res.error) { showToast("Error loading catalog: " + res.error.message); showCatalogUnavailable(); return; }
     catalogRows = res.data || [];
     catalogLoaded = true;
     populateCatalogFilters(catalogRows);
@@ -957,6 +962,12 @@
       opt.textContent = c.label;
       speciesSel.appendChild(opt);
     });
+  }
+
+  function showCatalogUnavailable() {
+    var body = document.getElementById("catalog-body");
+    body.innerHTML = '<tr><td colspan="8" class="empty">The catalog database is temporarily unreachable. Please try again later.</td></tr>';
+    document.getElementById("catalog-summary").innerHTML = "";
   }
 
   function showCatalogPrompt() {
