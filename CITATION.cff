@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use LocusAtlas in your work, please cite it as below. Archived under the project's former name, EpiLog -- see repository-code and url for the current name/location; the DOI is permanent and was not reissued for the rename."
+message: "If you use LocusAtlas in your work, please cite it as below. Formerly named EpiLog: versions up to v1.2.0 were archived under the old name; the concept DOI is the same for every version."
 title: "LocusAtlas: A Curated Genomic Safe Harbor Catalog and Post-Edit Silencing Registry"
 abstract: >-
   LocusAtlas (formerly EpiLog) is a literature-derived catalog of genomic safe harbor loci and their
@@ -27,4 +27,5 @@ keywords:
   - gene editing
   - epigenetics
   - genome engineering
-date-released: "2026-08-19"
+version: "v1.3.0"
+date-released: "2026-11-03"

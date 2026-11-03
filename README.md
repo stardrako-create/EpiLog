@@ -76,7 +76,7 @@ The catalog and registry **data** served by the live application is a separately
 
 ## Citation
 
-If you use LocusAtlas in your work, please cite via the archived release: [10.5281/zenodo.21996604](https://doi.org/10.5281/zenodo.21996604) (see [`CITATION.cff`](CITATION.cff)). Archived under the project's former name, EpiLog — the DOI is permanent and was not reissued for the rename (see note in `CITATION.cff`).
+If you use LocusAtlas in your work, please cite via the archived release: [10.5281/zenodo.21996604](https://doi.org/10.5281/zenodo.21996604) (see [`CITATION.cff`](CITATION.cff)). Versions up to v1.2.0 were archived under the project's former name, EpiLog; the concept DOI is the same for every version and always resolves to the latest one.
 
 ## Author
 
