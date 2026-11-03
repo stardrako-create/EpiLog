@@ -81,3 +81,5 @@ If you use LocusAtlas in your work, please cite via the archived release: [10.52
 ## Author
 
 Manuel Paiva Sequeira ([ORCID 0009-0009-6773-423X](https://orcid.org/0009-0009-6773-423X)) — BSc student in Biochemistry at NOVA FCT (Universidade NOVA de Lisboa). Built independently of any institution.
+
+**AI assistance.** Parts of the code, data extraction and documentation were produced with an AI coding assistant (Anthropic's Claude Code) working under the author's direction. Each catalog record links to its primary source (PMID or DOI) so that it can be checked independently.
