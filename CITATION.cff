@@ -10,8 +10,9 @@ abstract: >-
   for logging new gene-editing experiments and tracking silencing status over
   time.
 authors:
-  - family-names: "de Paiva Menezes de Sequeira"
-    given-names: "Manuel Afonso"
+  - family-names: "Paiva Sequeira"
+    given-names: "Manuel"
+    orcid: "https://orcid.org/0009-0009-6773-423X"
     email: stardrako@gmail.com
 repository-code: "https://github.com/stardrako-create/EpiLog"
 url: "https://locusatlas.netlify.app"

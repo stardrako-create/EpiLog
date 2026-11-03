@@ -22,8 +22,9 @@ Built originally to help find a safe harbor locus in *Canis lupus familiaris* (d
 
 ## Current coverage
 
-- **Species**: human, mouse, dog, pig, goat, cattle, zebrafish, *Drosophila melanogaster* (and expanding)
-- **100+ catalog records**, systematically mined from 300+ papers across two seed review articles plus targeted citation-chasing and species-specific literature searches
+- **Species**: human, mouse, dog, pig, goat, cattle, zebrafish, *Drosophila melanogaster* and others — 57 species as of 28 August 2026
+- **214 catalog records** as of 28 August 2026, systematically mined from 300+ papers across two seed review articles plus targeted citation-chasing and species-specific literature searches
+- **A computational-candidate tier for the dog**, linking to the [Safe Harbor Canino](https://github.com/stardrako-create/SafeHarborCanine) pipeline ([10.5281/zenodo.21996452](https://doi.org/10.5281/zenodo.21996452)); these are computational candidates, not experimentally validated loci
 - Every record carries: locus name, species, genome build, coordinates (where the source gives them), a confidence tier (high/medium/low, based on whether the data came from direct primary-text reading vs. a secondary review), a stability/duration summary, tissue context, and a linked PubMed source
 
 ## Why the data model looks the way it does
@@ -61,7 +62,7 @@ No build step. Fill in `SUPABASE_URL` and `SUPABASE_ANON_KEY` near the top of `i
 
 Being upfront about what's incomplete, rather than hiding it:
 
-- **`tissue_context` is only populated for records added since the field was introduced** (Drosophila and the pig/goat/cattle/dog/mouse multi-species batch). The original ~150 human/mouse records predate the field and are being backfilled retroactively.
+- **`tissue_context` was introduced after the first records were entered.** The 152 original human/mouse records were backfilled retroactively (release v1.1.0), so older entries carry a shorter tissue summary than the records added with the field in place.
 - **Dog (*Canis lupus familiaris*) has essentially no published safe-harbor characterization** — confirmed by two independent literature searches, not a gap in this catalog's coverage. This is itself a finding worth stating plainly, not a bug.
 - **Genome build is left `null`, not guessed, for several livestock coordinates** (some pig/goat/cattle records) where the source paper's exact reference assembly wasn't confirmed from the text available. Confirm against the current species assembly before using these for real design work.
 - **No automated re-validation against updated genome assemblies.** Coordinates are recorded as reported in the source paper; a dm3→dm6 (or GRCh37→GRCh38) liftover pass is future work, not done automatically.
@@ -79,4 +80,4 @@ If you use LocusAtlas in your work, please cite via the archived release: [10.52
 
 ## Author
 
-Manuel Afonso de Paiva Menezes de Sequeira — biochemistry student, FCT/UNL. Built independently, not affiliated with any institution.
+Manuel Paiva Sequeira ([ORCID 0009-0009-6773-423X](https://orcid.org/0009-0009-6773-423X)) — BSc student in Biochemistry at NOVA FCT (Universidade NOVA de Lisboa). Built independently of any institution.
